@@ -42,22 +42,37 @@
       margin-bottom: 10px;
     }
     .user-info {
-      margin-top: 20px;
+      margin-top: 15px;
       font-size: 14px;
       color: rgba(255, 255, 255, 0.85);
       letter-spacing: 0.5px;
     }
-    .close-btn {
-      margin-top: 25px;
-      padding: 10px 24px;
-      border: none;
-      border-radius: 50px;
-      background: rgba(255, 255, 255, 0.25);
-      color: #fff;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      border: 1px solid rgba(255, 255, 255, 0.4);
+    /* Wishes Container - Hidden by default */
+    .wishes-container {
+      margin-top: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+      pointer-events: none;
+    }
+    /* Visible State triggered after 5s */
+    .wishes-container.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .wish-bubble {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 14px;
+      padding: 10px 14px;
+      font-size: 13px;
+      line-height: 1.4;
+      color: #fffdf5;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
     }
   </style>
 </head>
@@ -67,20 +82,39 @@
     <h1>Happy Birthday<br>Saran</h1>
     <div class="user-info">
       <div>@|_VIP_JAAT_KING_|</div>
-
     </div>
-    <button class="close-btn" onclick="Telegram.WebApp.close()">Close</button>
+
+    <!-- Wishes section -->
+    <div id="wishes" class="wishes-container">
+      <div class="wish-bubble">🌟 May this year bring endless success, good health, and big wins!</div>
+      <div class="wish-bubble">🚀 Keep chasing greatness and leveling up in everything you do.</div>
+      <div class="wish-bubble">👑 Stay unmatched, stay legendary. Have a blast today!</div>
+    </div>
   </div>
 
   <script>
     Telegram.WebApp.ready();
     Telegram.WebApp.expand();
-    // Fire festive confetti immediately on open
+
+    // Initial confetti burst
     confetti({
       particleCount: 120,
       spread: 70,
       origin: { y: 0.6 }
     });
+
+    // Reveal wishes after 5 seconds
+    setTimeout(() => {
+      const wishes = document.getElementById('wishes');
+      wishes.classList.add('show');
+
+      // Secondary celebration confetti
+      confetti({
+        particleCount: 80,
+        spread: 90,
+        origin: { y: 0.7 }
+      });
+    }, 5000);
   </script>
 </body>
-</html>  
+</html>
