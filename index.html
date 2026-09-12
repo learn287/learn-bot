@@ -6,7 +6,7 @@
   <title>Birthday Wish</title>
   <!-- Telegram Web App SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <!-- Reliable Cloudflare CDN for confetti -->
+  <!-- Cloudflare CDN for Confetti -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.6.0/confetti.browser.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -23,7 +23,7 @@
       position: relative;
       width: 100%;
       max-width: 380px;
-      padding: 30px 22px;
+      padding: 32px 22px;
       border-radius: 24px;
       background: rgba(255, 255, 255, 0.16);
       backdrop-filter: blur(16px);
@@ -32,39 +32,65 @@
       box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
       text-align: center;
       color: #fff;
+      overflow: hidden;
+      min-height: 280px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
+
+    /* Page Switch Animations */
+    .page {
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .page.fade-out {
+      opacity: 0;
+      transform: translateY(-15px);
+    }
+    .page.hidden {
+      display: none;
+      opacity: 0;
+      transform: translateY(15px);
+    }
+    .page.fade-in {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Page 1 Elements */
     .balloons { 
-      font-size: 38px; 
-      margin-bottom: 5px; 
+      font-size: 40px; 
+      margin-bottom: 6px; 
     }
     h1 {
       font-family: 'Brush Script MT', cursive, sans-serif;
-      font-size: 42px;
+      font-size: 44px;
       line-height: 1.15;
       color: #fff9e6;
       text-shadow: 0 2px 8px rgba(212, 175, 55, 0.8), 0 0 15px rgba(255, 215, 0, 0.6);
       margin-bottom: 8px;
     }
     .user-info {
-      margin-top: 12px;
+      margin-top: 14px;
       font-size: 14px;
       color: rgba(255, 255, 255, 0.85);
       letter-spacing: 0.5px;
     }
+
+    /* Page 2 Elements */
+    .wishes-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #fff9e6;
+      margin-bottom: 14px;
+      letter-spacing: 0.5px;
+      text-shadow: 0 2px 6px rgba(212, 175, 55, 0.6);
+    }
     .wishes-container {
-      margin-top: 20px;
       display: flex;
       flex-direction: column;
       gap: 10px;
-      opacity: 0;
-      transform: translateY(16px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
-      pointer-events: none;
-    }
-    .wishes-container.show {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
     }
     .wish-bubble {
       background: rgba(255, 255, 255, 0.12);
@@ -86,55 +112,74 @@
 </head>
 <body>
   <div class="glass-card">
-    <div class="balloons">🎈 ✨ 🎈</div>
-    <h1>Happy Birthday<br>Saran</h1>
-    <div class="user-info">
-      <div>@|_VIP_JAAT_KING_|</div>
+    <!-- PAGE 1: Birthday Welcome -->
+    <div id="page1" class="page">
+      <div class="balloons">🎈 ✨ 🎈</div>
+      <h1>Happy Birthday<br>Saran</h1>
+      <div class="user-info">
+        <div>@|_VIP_JAAT_KING_|</div>
+      </div>
     </div>
 
-    <div id="wishes" class="wishes-container">
-      <div class="wish-bubble">🌟 May you get pure and trusted people in your life.</div>
-      <div class="wish-bubble">🚀 Keep chasing greatness and leveling up in everything you do.</div>
-      <div class="wish-bubble shayari">👑 Najara aankon ka badla tha khwabo ka nhi,
+    <!-- PAGE 2: Birthday Wishes -->
+    <div id="page2" class="page hidden">
+      <div class="wishes-title">✨ Special Wishes For You ✨</div>
+      <div class="wishes-container">
+        <div class="wish-bubble">🌟 May you get pure and trusted people in your life.</div>
+        <div class="wish-bubble">🚀 Keep chasing greatness and leveling up in everything you do.</div>
+        <div class="wish-bubble shayari">👑 Najara aankon ka badla tha khwabo ka nhi,
 jisko chaha tha woh badla tha chahne wala nhi,
 jo mile ushe muskura kr apna lena,
 zindagi ne jo diya, usi mein khubsurati dhund lena..</div>
+      </div>
     </div>
   </div>
 
   <script>
-    // Safe initialization for Telegram WebApp
+    // Initialize Telegram Mini App
     if (window.Telegram && window.Telegram.WebApp) {
       Telegram.WebApp.ready();
       Telegram.WebApp.expand();
     }
 
-    // Helper to safely trigger confetti without throwing errors if offline
+    // Safe confetti trigger
     function triggerConfetti(opts) {
       if (typeof confetti === 'function') {
         confetti(opts);
       }
     }
 
-    // Initial burst on open
+    // Page 1 opening celebration
     triggerConfetti({
-      particleCount: 100,
+      particleCount: 110,
       spread: 70,
       origin: { y: 0.6 }
     });
 
-    // Reveal wishes after 5 seconds
+    // Automatically transition to Page 2 after 5 seconds
     setTimeout(() => {
-      const wishes = document.getElementById('wishes');
-      if (wishes) {
-        wishes.classList.add('show');
-      }
+      const page1 = document.getElementById('page1');
+      const page2 = document.getElementById('page2');
 
-      triggerConfetti({
-        particleCount: 75,
-        spread: 90,
-        origin: { y: 0.7 }
-      });
+      // Start fading out Page 1
+      page1.classList.add('fade-out');
+
+      setTimeout(() => {
+        // Hide Page 1 and reveal Page 2
+        page1.style.display = 'none';
+        page2.classList.remove('hidden');
+
+        requestAnimationFrame(() => {
+          page2.classList.add('fade-in');
+        });
+
+        // Page 2 confetti blast
+        triggerConfetti({
+          particleCount: 90,
+          spread: 80,
+          origin: { y: 0.65 }
+        });
+      }, 500); // Matches the 0.5s CSS transition duration
     }, 5000);
   </script>
 </body>
