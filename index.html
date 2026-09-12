@@ -4,13 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Birthday Wish</title>
+  <!-- Telegram Web App SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <!-- Confetti library -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- Reliable Cloudflare CDN for confetti -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.6.0/confetti.browser.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background: rgba(15, 15, 20, 0.4); /* Translucent background */
+      background: rgba(15, 15, 20, 0.45);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -22,43 +23,44 @@
       position: relative;
       width: 100%;
       max-width: 380px;
-      padding: 35px 25px;
+      padding: 30px 22px;
       border-radius: 24px;
-      background: rgba(255, 255, 255, 0.18);
-      backdrop-filter: blur(25px) saturate(180%);
-      -webkit-backdrop-filter: blur(25px) saturate(180%);
-      border: 1px solid rgba(255, 255, 255, 0.35);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+      background: rgba(255, 255, 255, 0.16);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
       text-align: center;
       color: #fff;
     }
-    .balloons { font-size: 40px; margin-bottom: 5px; }
+    .balloons { 
+      font-size: 38px; 
+      margin-bottom: 5px; 
+    }
     h1 {
-      font-family: 'Brush Script MT', 'cursive', sans-serif;
+      font-family: 'Brush Script MT', cursive, sans-serif;
       font-size: 42px;
-      line-height: 1.1;
+      line-height: 1.15;
       color: #fff9e6;
       text-shadow: 0 2px 8px rgba(212, 175, 55, 0.8), 0 0 15px rgba(255, 215, 0, 0.6);
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
     .user-info {
-      margin-top: 15px;
+      margin-top: 12px;
       font-size: 14px;
       color: rgba(255, 255, 255, 0.85);
       letter-spacing: 0.5px;
     }
-    /* Wishes Container - Hidden by default */
     .wishes-container {
-      margin-top: 22px;
+      margin-top: 20px;
       display: flex;
       flex-direction: column;
       gap: 10px;
       opacity: 0;
-      transform: translateY(18px);
+      transform: translateY(16px);
       transition: opacity 0.8s ease, transform 0.8s ease;
       pointer-events: none;
     }
-    /* Visible State triggered after 5s */
     .wishes-container.show {
       opacity: 1;
       transform: translateY(0);
@@ -68,11 +70,17 @@
       background: rgba(255, 255, 255, 0.12);
       border: 1px solid rgba(255, 255, 255, 0.22);
       border-radius: 14px;
-      padding: 10px 14px;
-      font-size: 13px;
-      line-height: 1.4;
+      padding: 12px 14px;
+      font-size: 13.5px;
+      line-height: 1.5;
       color: #fffdf5;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      text-align: left;
+    }
+    .shayari {
+      white-space: pre-line;
+      font-style: italic;
+      line-height: 1.6;
     }
   </style>
 </head>
@@ -84,25 +92,33 @@
       <div>@|_VIP_JAAT_KING_|</div>
     </div>
 
-    <!-- Wishes section -->
     <div id="wishes" class="wishes-container">
-      <div class="wish-bubble">🌟 May you get pure and trusted people in  your life.</div>
+      <div class="wish-bubble">🌟 May you get pure and trusted people in your life.</div>
       <div class="wish-bubble">🚀 Keep chasing greatness and leveling up in everything you do.</div>
-      <div class="wish-bubble">👑 Najara aankon ka badla tha khwabo ka nhi, 
-        jisko chah tha woh badla tha chahne wala nhi,
-        jo mile ushe mushkura kr apna lena, 
-        zindagi ne jo diya, ushe mein khubsurte dhund lena..
-      </div>
+      <div class="wish-bubble shayari">👑 Najara aankon ka badla tha khwabo ka nhi,
+jisko chaha tha woh badla tha chahne wala nhi,
+jo mile ushe muskura kr apna lena,
+zindagi ne jo diya, usi mein khubsurati dhund lena..</div>
     </div>
   </div>
 
   <script>
-    Telegram.WebApp.ready();
-    Telegram.WebApp.expand();
+    // Safe initialization for Telegram WebApp
+    if (window.Telegram && window.Telegram.WebApp) {
+      Telegram.WebApp.ready();
+      Telegram.WebApp.expand();
+    }
 
-    // Initial confetti burst
-    confetti({
-      particleCount: 120,
+    // Helper to safely trigger confetti without throwing errors if offline
+    function triggerConfetti(opts) {
+      if (typeof confetti === 'function') {
+        confetti(opts);
+      }
+    }
+
+    // Initial burst on open
+    triggerConfetti({
+      particleCount: 100,
       spread: 70,
       origin: { y: 0.6 }
     });
@@ -110,11 +126,12 @@
     // Reveal wishes after 5 seconds
     setTimeout(() => {
       const wishes = document.getElementById('wishes');
-      wishes.classList.add('show');
+      if (wishes) {
+        wishes.classList.add('show');
+      }
 
-      // Secondary celebration confetti
-      confetti({
-        particleCount: 80,
+      triggerConfetti({
+        particleCount: 75,
         spread: 90,
         origin: { y: 0.7 }
       });
