@@ -8,38 +8,73 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <!-- Cloudflare CDN for Confetti -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.6.0/confetti.browser.min.js"></script>
+  <!-- Google Fonts: Playfair Display, Cinzel, Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Playfair+Display:ital,wght@1,600;1,700;1,800&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+    }
     body {
-      background: rgba(15, 15, 20, 0.45);
+      background: rgba(10, 10, 15, 0.55);
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       padding: 20px;
     }
+
+    /* Multi-Layered Specular Glassmorphism Card */
     .glass-card {
       position: relative;
       width: 100%;
-      max-width: 380px;
-      padding: 32px 22px;
-      border-radius: 24px;
-      background: rgba(255, 255, 255, 0.16);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+      max-width: 390px;
+      padding: 26px 22px 30px;
+      border-radius: 28px;
+      background: rgba(22, 22, 30, 0.65);
+      backdrop-filter: blur(24px) saturate(190%);
+      -webkit-backdrop-filter: blur(24px) saturate(190%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.7),
+        inset 0 1px 1px 0 rgba(255, 255, 255, 0.35);
       text-align: center;
       color: #fff;
       overflow: hidden;
-      min-height: 280px;
+      min-height: 310px;
       display: flex;
       flex-direction: column;
       justify-content: center;
     }
 
-    /* Page Switch Animations */
+    /* Progress Step Dots */
+    .step-dots {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 18px;
+    }
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.22);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .dot.active {
+      width: 20px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #ffd700, #ffae00);
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+    }
+
+    /* Page Crossfade Transitions */
     .page {
       transition: opacity 0.5s ease, transform 0.5s ease;
     }
@@ -58,51 +93,102 @@
       transform: translateY(0);
     }
 
-    /* Page 1 Elements */
+    /* Page 1: Greeting & Luxury Gold Title */
     .balloons { 
-      font-size: 40px; 
-      margin-bottom: 6px; 
+      font-size: 38px; 
+      margin-bottom: 6px;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
     }
     h1 {
-      font-family: 'Brush Script MT', cursive, sans-serif;
-      font-size: 44px;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 40px;
       line-height: 1.15;
-      color: #fff9e6;
-      text-shadow: 0 2px 8px rgba(212, 175, 55, 0.8), 0 0 15px rgba(255, 215, 0, 0.6);
-      margin-bottom: 8px;
+      background: linear-gradient(120deg, #fff2cc 0%, #ffd700 25%, #ffae00 50%, #ffd700 75%, #fff2cc 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shine 3.5s linear infinite;
+      margin-bottom: 14px;
+      filter: drop-shadow(0 2px 10px rgba(212, 175, 55, 0.45));
     }
-    .user-info {
-      margin-top: 14px;
-      font-size: 14px;
-      color: rgba(255, 255, 255, 0.85);
-      letter-spacing: 0.5px;
+    @keyframes shine {
+      to { background-position: 200% center; }
     }
 
-    /* Page 2 Elements */
-    .wishes-title {
-      font-size: 18px;
+    /* VIP Crown Pill Badge */
+    .vip-container {
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+    }
+    .vip-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 16px;
+      border-radius: 999px;
+      background: rgba(255, 215, 0, 0.1);
+      border: 1px solid rgba(255, 215, 0, 0.35);
+      font-size: 13px;
       font-weight: 600;
-      color: #fff9e6;
-      margin-bottom: 14px;
-      letter-spacing: 0.5px;
-      text-shadow: 0 2px 6px rgba(212, 175, 55, 0.6);
+      letter-spacing: 0.8px;
+      color: #fff4cc;
+      box-shadow: 
+        0 4px 15px rgba(0, 0, 0, 0.25),
+        inset 0 0 10px rgba(255, 215, 0, 0.15);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .vip-badge .crown {
+      font-size: 14px;
+      filter: drop-shadow(0 0 4px rgba(255, 215, 0, 0.8));
+    }
+
+    /* Page 2: Wishes */
+    .wishes-title {
+      font-family: 'Cinzel', serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: #fff2cc;
+      margin-bottom: 16px;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 8px rgba(212, 175, 55, 0.6);
     }
     .wishes-container {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 11px;
     }
+
+    /* Staggered Entrance Animations */
     .wish-bubble {
-      background: rgba(255, 255, 255, 0.12);
-      border: 1px solid rgba(255, 255, 255, 0.22);
-      border-radius: 14px;
-      padding: 12px 14px;
-      font-size: 13.5px;
+      background: rgba(255, 255, 255, 0.09);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 16px;
+      padding: 12px 15px;
+      font-size: 13px;
       line-height: 1.5;
       color: #fffdf5;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
       text-align: left;
+      opacity: 0;
+      transform: translateY(14px);
     }
+    .page.fade-in .wish-bubble {
+      animation: cardEntrance 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .page.fade-in .wish-bubble:nth-child(1) { animation-delay: 0.12s; }
+    .page.fade-in .wish-bubble:nth-child(2) { animation-delay: 0.28s; }
+    .page.fade-in .wish-bubble:nth-child(3) { animation-delay: 0.44s; }
+
+    @keyframes cardEntrance {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     .shayari {
       white-space: pre-line;
       font-style: italic;
@@ -112,12 +198,21 @@
 </head>
 <body>
   <div class="glass-card">
+    <!-- Step Indicators -->
+    <div class="step-dots">
+      <span id="dot1" class="dot active"></span>
+      <span id="dot2" class="dot"></span>
+    </div>
+
     <!-- PAGE 1: Birthday Welcome -->
     <div id="page1" class="page">
       <div class="balloons">🎈 ✨ 🎈</div>
       <h1>Happy Birthday<br>Saran</h1>
-      <div class="user-info">
-        <div>@|_VIP_JAAT_KING_|</div>
+      <div class="vip-container">
+        <div class="vip-badge">
+          <span class="crown">👑</span>
+          <span>@|_VIP_JAAT_KING_|</span>
+        </div>
       </div>
     </div>
 
@@ -142,14 +237,14 @@ zindagi ne jo diya, usi mein khubsurati dhund lena..</div>
       Telegram.WebApp.expand();
     }
 
-    // Safe confetti trigger
+    // Confetti helper
     function triggerConfetti(opts) {
       if (typeof confetti === 'function') {
         confetti(opts);
       }
     }
 
-    // Page 1 opening celebration
+    // Page 1 initial confetti
     triggerConfetti({
       particleCount: 110,
       spread: 70,
@@ -160,26 +255,32 @@ zindagi ne jo diya, usi mein khubsurati dhund lena..</div>
     setTimeout(() => {
       const page1 = document.getElementById('page1');
       const page2 = document.getElementById('page2');
+      const dot1 = document.getElementById('dot1');
+      const dot2 = document.getElementById('dot2');
 
-      // Start fading out Page 1
+      // Fade out Page 1
       page1.classList.add('fade-out');
 
       setTimeout(() => {
-        // Hide Page 1 and reveal Page 2
+        // Swap visibility
         page1.style.display = 'none';
         page2.classList.remove('hidden');
+
+        // Update progress step indicators
+        dot1.classList.remove('active');
+        dot2.classList.add('active');
 
         requestAnimationFrame(() => {
           page2.classList.add('fade-in');
         });
 
-        // Page 2 confetti blast
+        // Page 2 celebration burst
         triggerConfetti({
-          particleCount: 90,
-          spread: 80,
+          particleCount: 85,
+          spread: 85,
           origin: { y: 0.65 }
         });
-      }, 500); // Matches the 0.5s CSS transition duration
+      }, 500);
     }, 5000);
   </script>
 </body>
